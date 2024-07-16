@@ -1,21 +1,22 @@
-const { contract, wallet } = require("../utils/ethers_provider");
+const { contract, wallet } = require("../utils/geth_provider");
 const { ErrorHandler } = require("../utils/error_handler");
 const ethers = require("ethers");
 
-const createTokenHandler = async (req, res, next) => {
-  const tokenURI = req.params.tokenURI;
-  console.log(tokenId, "token id");
+const createTokenHandlerGeth = async (req, res, next) => {
+  const tokenURI = req.body.tokenURI;
+
+  console.log(tokenURI, "token id");
 
   try {
     const tx = await contract.mintNFT(tokenURI);
-    await tx.wait();
+    // await tx.wait();
     res.status(201).json({ txHash: tx.hash, tx_details: tx });
   } catch (error) {
     next(new ErrorHandler(500, error.message));
   }
 };
 
-const getTokenOwnerHandler = async (req, res, next) => {
+const getTokenOwnerHandlerGeth = async (req, res, next) => {
   const tokenId = req.params.tokenId;
 
   console.log(tokenId, "token id");
@@ -32,7 +33,7 @@ const getTokenOwnerHandler = async (req, res, next) => {
   }
 };
 
-const transferTokenHandler = async (req, res, next) => {
+const transferTokenHandlerGeth = async (req, res, next) => {
   const { to, tokenId } = req.body;
 
   // Validate `to` address
@@ -60,7 +61,7 @@ const transferTokenHandler = async (req, res, next) => {
 };
 
 module.exports = {
-  createTokenHandler,
-  getTokenOwnerHandler,
-  transferTokenHandler,
+  createTokenHandlerGeth,
+  getTokenOwnerHandlerGeth,
+  transferTokenHandlerGeth,
 };
